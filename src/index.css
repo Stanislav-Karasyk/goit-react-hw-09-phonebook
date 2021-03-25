@@ -1,0 +1,23 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body{
+  font-family: 'Raleway', sans-serif;
+  background-color: rgba(222, 227, 231, 0.473);
+}
+
+.NavLink{
+  color: black;
+  text-decoration: none;
+}
+.NavLinkActive{
+  color: blue;
+  font-weight: 700;
+}
+
+.list{
+  list-style-type: none;
+}
