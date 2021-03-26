@@ -18,7 +18,7 @@ const contacts = createReducer([], {
   [fetchContactSuccess]: (_, { payload }) => payload,
   [createContactSuccess]: (state, { payload }) => [...state, payload],
   [deleteContactSuccess]: (state, { payload }) => [
-    ...state.filter(item => item.id !== Number(payload)),
+    ...state.filter(item => item.id !== payload),
   ],
   [logoutSuccess]: () => [],
 });
@@ -50,6 +50,8 @@ const error = createReducer(null, {
   [deleteContactRequest]: clearError,
   [deleteContactError]: hendleError,
 });
+
+// const error = createReducer(null, {});
 
 export default combineReducers({
   contacts,

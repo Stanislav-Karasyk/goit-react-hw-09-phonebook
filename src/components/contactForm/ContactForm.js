@@ -1,60 +1,56 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import {createContact, fetchContacts} from '../../redux/contact/contact-operations';
+import React, { useState, useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import {
+  createContact,
+  fetchContacts,
+} from '../../redux/contact/contact-operations';
 
-class ContactForm extends Component {
-  state = {
-    name: '',
-    number: '',
-  };
+const initialState = {
+  name: '',
+  number: '',
+};
 
-  componentDidMount (){
-    this.props.fetchContacts();
-  }
+export default function ContactForm() {
+  const dispatch = useDispatch();
 
-  handleInput = e => {
+  const [user, setUser] = useState(initialState);
+
+  useEffect(() => {
+    dispatch(fetchContacts());
+  }, [dispatch]);
+
+  const handleInput = e => {
     const { name, value } = e.target;
-    this.setState({ [name]: value });
+    setUser(prevUser => ({ ...prevUser, [name]: value }));
   };
 
-  handleSubmit = e => {
+  const handleSubmit = e => {
     e.preventDefault();
-    this.props.onCreateContact(this.state);
-    this.setState({ name: '', number: '' });
+    dispatch(createContact(user));
+    setUser(initialState);
   };
 
-  render() {
-    const { name, number } = this.state;
-    return (
-      <form onSubmit={this.handleSubmit} >
-        <label>
-          Name
-          <input
-            name="name"
-            type="text"
-            onChange={this.handleInput}
-            value={name}
-          />
-        </label>
-        <label>
-          Number
-          <input
-            name="number"
-            type="text"
-            onChange={this.handleInput}
-            value={number}
-          />
-        </label>
-        <button type="submit">Add contacts</button>
-      </form>
-    );
-  }
+  return (
+    <form onSubmit={handleSubmit}>
+      <label>
+        Name
+        <input
+          name="name"
+          type="text"
+          onChange={handleInput}
+          value={user.name}
+        />
+      </label>
+      <label>
+        Number
+        <input
+          name="number"
+          type="text"
+          onChange={handleInput}
+          value={user.number}
+        />
+      </label>
+      <button type="submit">Add contacts</button>
+    </form>
+  );
 }
-
-const mapDispatchToProps = dispatch => ({
-  onCreateContact: ({ name, number }) =>
-    dispatch(createContact({ name, number })),
-  fetchContacts: () => dispatch(fetchContacts())
-  });
-
-export default connect(null, mapDispatchToProps)(ContactForm);

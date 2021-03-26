@@ -1,75 +1,67 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
+import React, { useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import { register } from '../../redux/auth/auth-operations';
-class RegisterPage extends Component {
-  state = {
-    name: '',
-    email: '',
-    password: '',
-  };
 
-  handleChange = e => {
-    const { name, value } = e.target;
-    this.setState({ [name]: value });
-  };
-
-  handleSubmit = e => {
-    e.preventDefault();
-
-    this.props.onRegister(this.state);
-
-    this.setState({ name: '', email: '', password: '' });
-  };
-
-  render() {
-    const { name, email, password } = this.state;
-    return (
-      <div>
-        <h1>Register Page</h1>
-        <h2>{this.props.error}</h2>
-        <form onSubmit={this.handleSubmit} autoComplete="off">
-          <label>
-            Name
-            <input
-              type="text"
-              name="name"
-              value={name}
-              onChange={this.handleChange}
-            />
-          </label>
-
-          <label>
-            Email
-            <input
-              type="email"
-              name="email"
-              value={email}
-              onChange={this.handleChange}
-            />
-          </label>
-
-          <label>
-            Password
-            <input
-              type="password"
-              name="password"
-              value={password}
-              onChange={this.handleChange}
-            />
-          </label>
-
-          <button type="submit">Register</button>
-        </form>
-      </div>
-    );
-  }
-}
-const mapStateToProps = state => ({
-  error: state.auth.error,
-});
-
-const mapDispatchToProps = {
-  onRegister: register,
+const initialState = {
+  name: '',
+  email: '',
+  password: '',
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(RegisterPage);
+export default function RegisterPage() {
+  const dispatch = useDispatch();
+  const [user, setUser] = useState(initialState);
+
+  const error = useSelector(user.error);
+
+  const handleChange = e => {
+    const { name, value } = e.target;
+    setUser(prevUser => ({ ...prevUser, [name]: value }));
+  };
+
+  const handleSubmit = e => {
+    e.preventDefault();
+    dispatch(register(user));
+    setUser(initialState);
+  };
+
+  return (
+    <div>
+      <h1>Register Page</h1>
+      {/* <h2>{error}</h2> */}
+      <form onSubmit={handleSubmit} autoComplete="off">
+        <label>
+          Name
+          <input
+            type="text"
+            name="name"
+            value={user.name}
+            onChange={handleChange}
+          />
+        </label>
+
+        <label>
+          Email
+          <input
+            type="email"
+            name="email"
+            value={user.email}
+            onChange={handleChange}
+          />
+        </label>
+
+        <label>
+          Password
+          <input
+            type="password"
+            name="password"
+            value={user.password}
+            onChange={handleChange}
+          />
+        </label>
+
+        <button type="submit">Register</button>
+      </form>
+    </div>
+  );
+}

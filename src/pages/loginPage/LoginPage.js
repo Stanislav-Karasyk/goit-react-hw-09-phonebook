@@ -1,65 +1,59 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
+import React, { useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import { logIn } from '../../redux/auth/auth-operations';
 
-class LoginPage extends Component {
-  state = {
-    email: '',
-    password: '',
-  };
+// const mapStateToProps = state => ({
+//   error: state.auth.error,
+// });
 
-  handleChange = e => {
-    const { name, value } = e.target;
-    this.setState({ [name]: value });
-  };
-
-  handleSubmit = e => {
-    e.preventDefault();
-
-    this.props.onLogin(this.state);
-
-    this.setState({ name: '', email: '', password: '' });
-  };
-
-  render() {
-    const { email, password } = this.state;
-    return (
-      <div>
-        <h1>Login Page</h1>
-        <h2>{this.props.error}</h2>
-        <form onSubmit={this.handleSubmit} autoComplete="off">
-          <label>
-            Email
-            <input
-              type="email"
-              name="email"
-              value={email}
-              onChange={this.handleChange}
-            />
-          </label>
-
-          <label>
-            Password
-            <input
-              type="password"
-              name="password"
-              value={password}
-              onChange={this.handleChange}
-            />
-          </label>
-          <button type="submit">login</button>
-        </form>
-      </div>
-    );
-  }
-}
-
-const mapStateToProps = state => ({
-  error: state.auth.error,
-});
-
-const mapDispatchToProps = {
-  onLogin: logIn,
+const initialState = {
+  email: '',
+  password: '',
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(LoginPage);
+export default function LoginPage() {
+  const dispatch = useDispatch();
+  const [user, setUser] = useState(initialState);
+
+  // const error = useSelector(user.error)
+
+  const handleChange = e => {
+    const { name, value } = e.target;
+    setUser(prevUser => ({ ...prevUser, [name]: value }));
+  };
+
+  const handleSubmit = e => {
+    e.preventDefault();
+    dispatch(logIn(user));
+    setUser(initialState);
+  };
+
+  return (
+    <div>
+      <h1>Login Page</h1>
+      {/* <h2>{error}</h2> */}
+      <form onSubmit={handleSubmit} autoComplete="off">
+        <label>
+          Email
+          <input
+            type="email"
+            name="email"
+            value={user.email}
+            onChange={handleChange}
+          />
+        </label>
+
+        <label>
+          Password
+          <input
+            type="password"
+            name="password"
+            value={user.password}
+            onChange={handleChange}
+          />
+        </label>
+        <button type="submit">login</button>
+      </form>
+    </div>
+  );
+}
