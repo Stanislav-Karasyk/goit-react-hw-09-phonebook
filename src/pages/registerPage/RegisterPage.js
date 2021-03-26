@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { register } from '../../redux/auth/auth-operations';
+import { getError } from '../../redux/auth/auth-selectors';
 
 const initialState = {
   name: '',
@@ -12,7 +13,7 @@ export default function RegisterPage() {
   const dispatch = useDispatch();
   const [user, setUser] = useState(initialState);
 
-  const error = useSelector(user.error);
+  const error = useSelector(getError);
 
   const handleChange = e => {
     const { name, value } = e.target;
@@ -28,7 +29,7 @@ export default function RegisterPage() {
   return (
     <div>
       <h1>Register Page</h1>
-      {/* <h2>{error}</h2> */}
+      <h2>{error}</h2>
       <form onSubmit={handleSubmit} autoComplete="off">
         <label>
           Name

@@ -1,10 +1,7 @@
 import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { logIn } from '../../redux/auth/auth-operations';
-
-// const mapStateToProps = state => ({
-//   error: state.auth.error,
-// });
+import { getError } from '../../redux/auth/auth-selectors';
 
 const initialState = {
   email: '',
@@ -15,7 +12,7 @@ export default function LoginPage() {
   const dispatch = useDispatch();
   const [user, setUser] = useState(initialState);
 
-  // const error = useSelector(user.error)
+  const error = useSelector(getError);
 
   const handleChange = e => {
     const { name, value } = e.target;
@@ -31,7 +28,7 @@ export default function LoginPage() {
   return (
     <div>
       <h1>Login Page</h1>
-      {/* <h2>{error}</h2> */}
+      <h2>{error}</h2>
       <form onSubmit={handleSubmit} autoComplete="off">
         <label>
           Email

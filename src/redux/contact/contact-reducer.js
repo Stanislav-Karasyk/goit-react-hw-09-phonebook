@@ -51,8 +51,6 @@ const error = createReducer(null, {
   [deleteContactError]: hendleError,
 });
 
-// const error = createReducer(null, {});
-
 export default combineReducers({
   contacts,
   filter,
